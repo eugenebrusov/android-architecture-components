@@ -17,10 +17,8 @@
 package com.android.example.github.ui.search
 
 import android.arch.lifecycle.ViewModel
-import com.android.example.github.testing.OpenForTesting
 import javax.inject.Inject
 
-@OpenForTesting
 class SearchViewModel @Inject constructor() : ViewModel() {
 
 }

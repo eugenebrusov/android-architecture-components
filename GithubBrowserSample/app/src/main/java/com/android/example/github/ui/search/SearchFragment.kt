@@ -22,9 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.android.example.github.di.Injectable
-import com.android.example.github.testing.OpenForTesting
 
-@OpenForTesting
 class SearchFragment : Fragment(), Injectable {
 
     override fun onCreateView(
