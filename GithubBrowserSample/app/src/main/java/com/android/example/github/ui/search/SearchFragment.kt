@@ -16,7 +16,6 @@
 
 package com.android.example.github.ui.search
 
-import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -24,10 +23,7 @@ import android.databinding.DataBindingComponent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.os.IBinder
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -41,8 +37,6 @@ import com.android.example.github.binding.FragmentDataBindingComponent
 import com.android.example.github.databinding.SearchFragmentBinding
 import com.android.example.github.di.Injectable
 import com.android.example.github.testing.OpenForTesting
-import com.android.example.github.ui.common.RepoListAdapter
-import com.android.example.github.ui.common.RetryCallback
 import com.android.example.github.util.autoCleared
 import javax.inject.Inject
 
@@ -58,8 +52,6 @@ class SearchFragment : Fragment(), Injectable {
     var dataBindingComponent: DataBindingComponent = FragmentDataBindingComponent(this)
 
     var binding by autoCleared<SearchFragmentBinding>()
-
-    var adapter by autoCleared<RepoListAdapter>()
 
     lateinit var searchViewModel: SearchViewModel
 
@@ -83,25 +75,25 @@ class SearchFragment : Fragment(), Injectable {
         searchViewModel = ViewModelProviders.of(this, viewModelFactory)
             .get(SearchViewModel::class.java)
         initRecyclerView()
-        val rvAdapter = RepoListAdapter(
-            dataBindingComponent = dataBindingComponent,
-            appExecutors = appExecutors,
-            showFullName = true
-        ) { repo ->
-            navController().navigate(
-                    SearchFragmentDirections.showRepo(repo.owner.login, repo.name)
-            )
-        }
-        binding.repoList.adapter = rvAdapter
-        adapter = rvAdapter
-
-        initSearchInputListener()
-
-        binding.callback = object : RetryCallback {
-            override fun retry() {
-                searchViewModel.refresh()
-            }
-        }
+//        val rvAdapter = RepoListAdapter(
+//            dataBindingComponent = dataBindingComponent,
+//            appExecutors = appExecutors,
+//            showFullName = true
+//        ) { repo ->
+//            navController().navigate(
+//                    SearchFragmentDirections.showRepo(repo.owner.login, repo.name)
+//            )
+//        }
+//        binding.repoList.adapter = rvAdapter
+//        adapter = rvAdapter
+//
+//        initSearchInputListener()
+//
+//        binding.callback = object : RetryCallback {
+//            override fun retry() {
+//                searchViewModel.refresh()
+//            }
+//        }
     }
 
     private fun initSearchInputListener() {
@@ -133,32 +125,32 @@ class SearchFragment : Fragment(), Injectable {
 
     private fun initRecyclerView() {
 
-        binding.repoList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                val lastPosition = layoutManager.findLastVisibleItemPosition()
-                if (lastPosition == adapter.itemCount - 1) {
-                    searchViewModel.loadNextPage()
-                }
-            }
-        })
-        searchViewModel.results.observe(this, Observer { result ->
-            binding.searchResource = result
-            binding.resultCount = result?.data?.size ?: 0
-            adapter.submitList(result?.data)
-        })
-
-        searchViewModel.loadMoreStatus.observe(this, Observer { loadingMore ->
-            if (loadingMore == null) {
-                binding.loadingMore = false
-            } else {
-                binding.loadingMore = loadingMore.isRunning
-                val error = loadingMore.errorMessageIfNotHandled
-                if (error != null) {
-                    Snackbar.make(binding.loadMoreBar, error, Snackbar.LENGTH_LONG).show()
-                }
-            }
-        })
+//        binding.repoList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+//                val lastPosition = layoutManager.findLastVisibleItemPosition()
+//                if (lastPosition == adapter.itemCount - 1) {
+//                    searchViewModel.loadNextPage()
+//                }
+//            }
+//        })
+//        searchViewModel.results.observe(this, Observer { result ->
+//            binding.searchResource = result
+//            binding.resultCount = result?.data?.size ?: 0
+//            adapter.submitList(result?.data)
+//        })
+//
+//        searchViewModel.loadMoreStatus.observe(this, Observer { loadingMore ->
+//            if (loadingMore == null) {
+//                binding.loadingMore = false
+//            } else {
+//                binding.loadingMore = loadingMore.isRunning
+//                val error = loadingMore.errorMessageIfNotHandled
+//                if (error != null) {
+//                    Snackbar.make(binding.loadMoreBar, error, Snackbar.LENGTH_LONG).show()
+//                }
+//            }
+//        })
     }
 
     private fun dismissKeyboard(windowToken: IBinder) {

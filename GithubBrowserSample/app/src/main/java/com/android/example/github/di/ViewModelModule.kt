@@ -20,7 +20,6 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 
 import com.android.example.github.ui.search.SearchViewModel
-import com.android.example.github.ui.user.UserViewModel
 import com.android.example.github.viewmodel.GithubViewModelFactory
 
 import dagger.Binds
@@ -30,10 +29,6 @@ import dagger.multibindings.IntoMap
 @Suppress("unused")
 @Module
 abstract class ViewModelModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(UserViewModel::class)
-    abstract fun bindUserViewModel(userViewModel: UserViewModel): ViewModel
 
     @Binds
     @IntoMap
